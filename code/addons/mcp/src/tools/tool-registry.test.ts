@@ -37,7 +37,7 @@ function registerTestToolsetThrowing(error: Error) {
       description: 'stub',
       methods: {
         run: {
-          input: v.object({}),
+          input: v.strictObject({}),
           title: 'Storybook Tests',
           description: () => {
             throw error;
@@ -55,8 +55,8 @@ function availabilityWith(overrides: Partial<ToolAvailability> = {}): ToolAvaila
     moduleGraphSupported: false,
     changeDetectionEnabled: false,
     reviewEnabled: false,
-    reviewEnabledForCli: false,
     docsEnabled: false,
+    docsEnabledForCli: false,
     docsHasManifests: false,
     docsFeatureEnabled: false,
     testSupported: false,
@@ -165,7 +165,7 @@ describe('test-run over the registry', () => {
         description: 'stub',
         methods: {
           run: {
-            input: v.object({}),
+            input: v.strictObject({}),
             title: 'Storybook Tests',
             description: 'run',
             handler: async () => ({
