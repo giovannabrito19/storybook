@@ -217,4 +217,56 @@ describe('inferControls', () => {
       expect(result.customOption.control).toEqual({ type: 'object' });
     });
   });
+
+  describe('Area 2: Enum e options (Caixa-Preta)', () => {
+    const inferSizeControl = (value: string[]) =>
+      inferControls(
+        getStoryContext({
+          argTypes: { size: { name: 'size', type: { name: 'enum', value } } },
+        })
+      ).size;
+
+    const makeOptions = (count: number) =>
+      Array.from({ length: count }, (_, index) => `option-${index + 1}`);
+
+    it('CT01 - valor limite (vazio): enum sem opcoes deve usar "radio"', () => {
+      const size = inferSizeControl([]);
+
+      expect(size.control).toEqual({ type: 'radio' });
+    });
+
+    it('CT02 - valor limite (minimo CE1): 1 opcao deve usar "radio"', () => {
+      const size = inferSizeControl(['small']);
+
+      expect(size.control).toEqual({ type: 'radio' });
+      expect(size.options).toEqual(['small']);
+    });
+
+    it('CT03 - particao de equivalencia (CE1): 3 opcoes devem usar "radio"', () => {
+      const size = inferSizeControl(['small', 'medium', 'large']);
+
+      expect(size.control).toEqual({ type: 'radio' });
+      expect(size.options).toEqual(['small', 'medium', 'large']);
+    });
+
+    it('CT04 - valor limite (maximo CE1): 5 opcoes devem usar "radio"', () => {
+      const size = inferSizeControl(makeOptions(5));
+
+      expect(size.control).toEqual({ type: 'radio' });
+    });
+
+    it('CT05 - valor limite (minimo CE2): 6 opcoes devem mudar para "select"', () => {
+      const size = inferSizeControl(makeOptions(6));
+
+      expect(size.control).toEqual({ type: 'select' });
+      expect(size.options).toEqual(makeOptions(6));
+    });
+
+    it('CT06 - particao de equivalencia (CE2): 10 opcoes devem permanecer "select"', () => {
+      const size = inferSizeControl(makeOptions(10));
+
+      expect(size.control).toEqual({ type: 'select' });
+      expect(size.options).toEqual(makeOptions(10));
+    });
+  });
 });
