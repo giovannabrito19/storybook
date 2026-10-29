@@ -85,6 +85,12 @@ export function setProjectAnnotations<TRenderer extends Renderer = Renderer>(
 
 const cleanups: CleanupCallback[] = [];
 
+export async function cleanup() {
+  for (const callback of [...cleanups].reverse()) {
+    await callback();
+  }
+}
+
 export function composeStory<TRenderer extends Renderer = Renderer, TArgs extends Args = Args>(
   storyAnnotations: LegacyStoryAnnotationsOrFn<TRenderer>,
   componentAnnotations: ComponentAnnotations<TRenderer, TArgs>,
