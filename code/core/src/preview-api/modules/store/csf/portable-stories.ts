@@ -250,12 +250,7 @@ export function composeStory<TRenderer extends Renderer = Renderer, TArgs extend
       id: story.id,
       storyName,
       load: async () => {
-        // First run any registered cleanup function
-
-        // First run any registered cleanup function
-        for (const callback of [...cleanups].reverse()) {
-          await callback();
-        }
+        await cleanup();
         cleanups.length = 0;
 
         const context = initializeContext();
@@ -320,9 +315,7 @@ async function runStory<TRenderer extends Renderer>(
   story: PreparedStory<TRenderer>,
   context: StoryContextForRender<TRenderer>
 ) {
-  for (const callback of [...cleanups].reverse()) {
-    await callback();
-  }
+  await cleanup();
   cleanups.length = 0;
   const hookContext = hideArgTypes(context);
 
