@@ -14,6 +14,7 @@ import { definePreview } from '../../../../csf/csf-factories.ts';
 import { Tag } from '../../../../shared/constants/tags.ts';
 import * as defaultExportAnnotations from './__mocks__/defaultExportAnnotations.mockfile.ts';
 import * as namedExportAnnotations from './__mocks__/namedExportAnnotations.mockfile.ts';
+import * as portableStories from './portable-stories.ts';
 import { composeStories, composeStory, setProjectAnnotations } from './portable-stories.ts';
 
 type StoriesModule = Store_CSFExports & Record<string, any>;
@@ -364,6 +365,24 @@ describe('composeStory', () => {
     await composedStory.load();
     composedStory();
     expect(spyFn).toHaveBeenCalled();
+  });
+
+  it('should explicitly clean up the last story without loading another story', async () => {
+    const releaseResource = vi.fn();
+    const composedStory = composeStory(
+      {
+        render: () => 'foo',
+        beforeEach: () => releaseResource,
+      },
+      {}
+    );
+
+    await composedStory.load();
+    expect(releaseResource).not.toHaveBeenCalled();
+
+    await portableStories.cleanup();
+
+    expect(releaseResource).toHaveBeenCalledOnce();
   });
 
   it('should call beforeEach from Project, Meta and Story level', async () => {
