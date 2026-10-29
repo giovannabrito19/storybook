@@ -89,6 +89,7 @@ export async function cleanup() {
   for (const callback of [...cleanups].reverse()) {
     await callback();
   }
+  cleanups.length = 0;
 }
 
 export function composeStory<TRenderer extends Renderer = Renderer, TArgs extends Args = Args>(
