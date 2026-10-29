@@ -252,7 +252,6 @@ export function composeStory<TRenderer extends Renderer = Renderer, TArgs extend
       storyName,
       load: async () => {
         await cleanup();
-        cleanups.length = 0;
 
         const context = initializeContext();
         const hookContext = hideArgTypes(context);
@@ -317,7 +316,6 @@ async function runStory<TRenderer extends Renderer>(
   context: StoryContextForRender<TRenderer>
 ) {
   await cleanup();
-  cleanups.length = 0;
   const hookContext = hideArgTypes(context);
 
   if (!context.canvasElement) {
