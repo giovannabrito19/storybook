@@ -385,6 +385,24 @@ describe('composeStory', () => {
     expect(releaseResource).toHaveBeenCalledOnce();
   });
 
+  it('should release a story resource only once when cleanup is called twice', async () => {
+    const releaseResource = vi.fn();
+    const composedStory = composeStory(
+      {
+        render: () => 'foo',
+        beforeEach: () => releaseResource,
+      },
+      {}
+    );
+
+    await composedStory.load();
+
+    await portableStories.cleanup();
+    await portableStories.cleanup();
+
+    expect(releaseResource).toHaveBeenCalledOnce();
+  });
+
   it('should call beforeEach from Project, Meta and Story level', async () => {
     const beforeEachSpy = vi.fn();
     const cleanupSpy = vi.fn();
