@@ -39,9 +39,38 @@ afterEach(() => {
 // example with composeStory, returns a single story composed with args/decorators
 const Secondary = composeStory(ButtonStories.CSF2Secondary, ButtonStories.default);
 describe('cleanup', () => {
-  it('should export cleanup function from portable stories', () => {
+  it('should export cleanup function from portable stories', async () => {
     expect(cleanupStories).toBeDefined();
     expect(typeof cleanupStories).toBe('function');
+    await expect(cleanupStories()).resolves.toBeUndefined();
+  });
+
+  it('unmounts the story and executes effect cleanups when cleanup is called', async () => {
+    const unmountedSpy = vi.fn();
+
+    const ComponentWithCleanup = () => {
+      React.useEffect(() => {
+        return () => {
+          unmountedSpy();
+        };
+      }, []);
+      return <div data-testid="active-component">Active</div>;
+    };
+
+    const Story = composeStory(
+      {
+        render: () => <ComponentWithCleanup />,
+      },
+      {
+        component: ComponentWithCleanup,
+      }
+    );
+
+    await Story.run();
+    expect(screen.getByTestId('active-component')).toBeInTheDocument();
+
+    // RED: falha proposital porque cleanup ainda não foi executado após a story rodar
+    expect(unmountedSpy).toHaveBeenCalledTimes(1);
   });
 });
 
