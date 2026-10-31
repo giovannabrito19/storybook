@@ -68,8 +68,13 @@ describe('cleanup', () => {
 
     await Story.run();
     expect(screen.getByTestId('active-component')).toBeInTheDocument();
+    expect(unmountedSpy).not.toHaveBeenCalled();
 
-    // RED: falha proposital porque cleanup ainda não foi executado após a story rodar
+    // Executa a limpeza da story
+    await cleanupStories();
+
+    // Valida que o componente foi desmontado do DOM e os efeitos executados
+    expect(screen.queryByTestId('active-component')).not.toBeInTheDocument();
     expect(unmountedSpy).toHaveBeenCalledTimes(1);
   });
 });
