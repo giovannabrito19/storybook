@@ -12,7 +12,7 @@ import type {
 } from 'storybook/internal/types';
 
 import {
-  cleanup,
+  cleanup as originalCleanup,
   composeConfigs,
   composeStories as originalComposeStories,
   composeStory as originalComposeStory,
@@ -159,4 +159,20 @@ export function composeStories<TModule extends Store_CSFExports<ReactRenderer, a
   >;
 }
 
-export { cleanup };
+/**
+ * Unmounts the current story and cleans up any registered callbacks and side effects.
+ * Useful in test suites (e.g. `afterEach`) when testing portable stories.
+ *
+ * Example:
+ *
+ * ```jsx
+ * import { cleanup } from '@storybook/react';
+ *
+ * afterEach(async () => {
+ *   await cleanup();
+ * });
+ * ```
+ */
+export async function cleanup(): Promise<void> {
+  return originalCleanup();
+}
