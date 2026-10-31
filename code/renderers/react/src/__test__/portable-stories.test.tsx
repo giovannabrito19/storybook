@@ -9,7 +9,12 @@ import type { Meta } from '@storybook/react';
 import { expectTypeOf } from 'expect-type';
 import { addons, useEffect } from 'storybook/preview-api';
 
-import { composeStories, composeStory, setProjectAnnotations } from '../index.ts';
+import {
+  cleanup as cleanupStories,
+  composeStories,
+  composeStory,
+  setProjectAnnotations,
+} from '../index.ts';
 import type { Button } from './Button.tsx';
 import * as ButtonStories from './Button.stories.tsx';
 import * as ComponentWithErrorStories from './ComponentWithError.stories.tsx';
@@ -33,6 +38,13 @@ afterEach(() => {
 
 // example with composeStory, returns a single story composed with args/decorators
 const Secondary = composeStory(ButtonStories.CSF2Secondary, ButtonStories.default);
+describe('cleanup', () => {
+  it('should export cleanup function from portable stories', () => {
+    expect(cleanupStories).toBeDefined();
+    expect(typeof cleanupStories).toBe('function');
+  });
+});
+
 describe('renders', () => {
   it('renders primary button', () => {
     render(<CSF3Primary>Hello world</CSF3Primary>);
