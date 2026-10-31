@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup as testingLibraryCleanup, render, screen } from '@testing-library/react';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import React from 'react';
@@ -9,12 +9,7 @@ import type { Meta } from '@storybook/react';
 import { expectTypeOf } from 'expect-type';
 import { addons, useEffect } from 'storybook/preview-api';
 
-import {
-  cleanup as cleanupStories,
-  composeStories,
-  composeStory,
-  setProjectAnnotations,
-} from '../index.ts';
+import { cleanup, composeStories, composeStory, setProjectAnnotations } from '../index.ts';
 import type { Button } from './Button.tsx';
 import * as ButtonStories from './Button.stories.tsx';
 import * as ComponentWithErrorStories from './ComponentWithError.stories.tsx';
@@ -32,28 +27,25 @@ beforeAll(async () => {
   await projectAnnotations.beforeAll?.();
 });
 
-afterEach(() => {
-  cleanup();
+afterEach(async () => {
+  testingLibraryCleanup();
+  await cleanup();
 });
 
 // example with composeStory, returns a single story composed with args/decorators
 const Secondary = composeStory(ButtonStories.CSF2Secondary, ButtonStories.default);
 describe('cleanup', () => {
   it('should export cleanup function from portable stories', async () => {
-    expect(cleanupStories).toBeDefined();
-    expect(typeof cleanupStories).toBe('function');
-    await expect(cleanupStories()).resolves.toBeUndefined();
+    expect(cleanup).toBeDefined();
+    expect(typeof cleanup).toBe('function');
+    await expect(cleanup()).resolves.toBeUndefined();
   });
 
   it('unmounts the story and executes effect cleanups when cleanup is called', async () => {
     const unmountedSpy = vi.fn();
 
     const ComponentWithCleanup = () => {
-      React.useEffect(() => {
-        return () => {
-          unmountedSpy();
-        };
-      }, []);
+      React.useEffect(() => () => unmountedSpy(), []);
       return <div data-testid="active-component">Active</div>;
     };
 
@@ -70,15 +62,12 @@ describe('cleanup', () => {
     expect(screen.getByTestId('active-component')).toBeInTheDocument();
     expect(unmountedSpy).not.toHaveBeenCalled();
 
-    // Executa a limpeza da story
-    await cleanupStories();
+    await cleanup();
 
-    // Valida que o componente foi desmontado do DOM e os efeitos executados
     expect(screen.queryByTestId('active-component')).not.toBeInTheDocument();
     expect(unmountedSpy).toHaveBeenCalledTimes(1);
   });
 });
-
 describe('renders', () => {
   it('renders primary button', () => {
     render(<CSF3Primary>Hello world</CSF3Primary>);
