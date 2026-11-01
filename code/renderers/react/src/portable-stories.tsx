@@ -161,9 +161,11 @@ export function composeStories<TModule extends Store_CSFExports<ReactRenderer, a
 
 /**
  * Unmounts the current story and cleans up any registered callbacks and side effects.
- * Useful in test suites (e.g. `afterEach`) when testing portable stories.
  *
- * Example:
+ * Note: If your test environment provides a global `afterEach` hook (e.g., Jest or Vitest with `globals: true`),
+ * cleanup is registered automatically after each test.
+ *
+ * For environments without global hooks, call this function manually in your test teardown:
  *
  * ```jsx
  * import { cleanup } from '@storybook/react';
