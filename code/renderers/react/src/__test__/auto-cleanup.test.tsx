@@ -1,7 +1,10 @@
 // @vitest-environment happy-dom
 import React, { useEffect } from 'react';
-import { describe, expect, it } from 'vitest';
-import { composeStory } from '../index.ts';
+import { describe, expect, it, afterEach as vitestAfterEach } from 'vitest';
+
+(globalThis as any).afterEach = vitestAfterEach;
+
+const { composeStory } = await import('../index.ts');
 
 let taDesmontado = false;
 
@@ -13,21 +16,18 @@ const ComponenteComCleanup = () => {
   }, []);
   return <div data-testid="story-elemento">Story Montada</div>;
 };
-
-const StoryTest = composeStory(
+const Test = composeStory(
   {
     render: () => <ComponenteComCleanup />,
   },
   { component: ComponenteComCleanup }
 );
-
-describe('Auto Cleanup de Portable Stories', () => {
+describe('Auto Cleanup de Portable Stories (ambiente global)', () => {
   it('1: renderiza a story no primeiro teste', async () => {
     taDesmontado = false;
-    await StoryTest.run();
+    await Test.run();
     expect(taDesmontado).toBe(false);
   });
-
   it('2: verifica se a limpeza ocorreu apos o termino do teste anterior', () => {
     expect(taDesmontado).toBe(true);
   });
