@@ -84,11 +84,18 @@ export function setProjectAnnotations<TRenderer extends Renderer = Renderer>(
 }
 const cleanups: CleanupCallback[] = [];
 
+/**
+ * Unmounts current stories and executes all registered cleanup callbacks.
+ *
+ * Intercepts errors thrown by individual callbacks (such as hooks or decorators)
+ * to guarantee that all remaining teardown routines, including DOM unmounting,
+ * are fully executed before rethrowing the primary exception.
+ */
+
 export async function cleanup() {
   const errors: unknown[] = [];
   const callbacks = [...cleanups].reverse();
-  cleanups.length = 0; // Esvazia a lista imediatamente para evitar retenção ou re-execuções corrompidas
-
+  cleanups.length = 0;
   for (const callback of callbacks) {
     try {
       await callback();
@@ -97,7 +104,6 @@ export async function cleanup() {
     }
   }
 
-  // Se houver erros acumulados, relança o primeiro erro após garantir a execução de todos os callbacks
   if (errors.length > 0) {
     throw errors[0];
   }
