@@ -596,3 +596,43 @@ describe('setProjectAnnotations', () => {
     );
   });
 });
+
+describe('cleanup', () => {
+  it('should aggregate every failure when more than one cleanup callback throws', async () => {
+    const calls: string[] = [];
+    const storyError = new Error('cleanup from story failed');
+    const projectError = new Error('cleanup from project failed');
+
+    const composedStory = composeStory(
+      {
+        render: () => 'foo',
+        beforeEach: () => () => {
+          calls.push('story');
+          throw storyError;
+        },
+      },
+      {
+        beforeEach: () => () => {
+          calls.push('meta');
+        },
+      },
+      {
+        beforeEach: () => () => {
+          calls.push('project');
+          throw projectError;
+        },
+      }
+    );
+
+    await composedStory.load();
+
+    const failure: any = await portableStories.cleanup().then(
+      () => undefined,
+      (error) => error
+    );
+
+    expect(calls).toEqual(['story', 'meta', 'project']);
+    expect(failure).toBeInstanceOf(AggregateError);
+    expect(failure.errors).toEqual([storyError, projectError]);
+  });
+});
