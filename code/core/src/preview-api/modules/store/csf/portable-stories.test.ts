@@ -672,7 +672,9 @@ describe('cleanup', () => {
       { beforeEach: () => releaseProjectResource }
     );
 
-    await expect(composedStory.load()).rejects.toBe(storyBeforeEachError);
+    const failure = await composedStory.load().catch((error: unknown) => error);
+
+    expect((failure as AggregateError).errors).toContain(storyBeforeEachError);
 
     expect(releaseProjectResource).toHaveBeenCalledOnce();
   });
