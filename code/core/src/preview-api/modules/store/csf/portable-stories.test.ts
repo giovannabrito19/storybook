@@ -632,4 +632,24 @@ describe('cleanup', () => {
     expect(failure).toBeInstanceOf(AggregateError);
     expect((failure as AggregateError).errors).toEqual([storyError, projectError]);
   });
+
+  it('should release the resources of earlier beforeEach hooks when a later one throws', async () => {
+    const releaseProjectResource = vi.fn();
+    const beforeEachError = new Error('meta beforeEach failed');
+
+    const composedStory = composeStory(
+      { render: () => 'foo' },
+      {
+        beforeEach: () => {
+          throw beforeEachError;
+        },
+      },
+      { beforeEach: () => releaseProjectResource }
+    );
+
+    await expect(composedStory.load()).rejects.toBe(beforeEachError);
+    await portableStories.cleanup();
+
+    expect(releaseProjectResource).toHaveBeenCalledOnce();
+  });
 });
