@@ -18,8 +18,7 @@ import type {
   StrictArgTypes,
 } from 'storybook/internal/types';
 
-import { global } from '@storybook/global';
-import { global as globalThis } from '@storybook/global';
+import { global, global as globalThis } from '@storybook/global';
 
 import { Tag } from '../../../../shared/constants/tags.ts';
 import { applyHooks } from '../../addons/index.ts';
@@ -70,19 +69,27 @@ export function prepareStory<TRenderer extends Renderer>(
 
   const applyBeforeEach = async (context: StoryContext<TRenderer>): Promise<CleanupCallback[]> => {
     const cleanupCallbacks = new Array<() => unknown>();
-    for (const beforeEach of [
-      ...normalizeArrays(projectAnnotations.beforeEach),
-      ...normalizeArrays(componentAnnotations.beforeEach),
-      ...normalizeArrays(storyAnnotations.beforeEach),
-    ]) {
-      if (context.abortSignal.aborted) {
-        return cleanupCallbacks;
-      }
-      const cleanup = await beforeEach(context);
+    try {
+      for (const beforeEach of [
+        ...normalizeArrays(projectAnnotations.beforeEach),
+        ...normalizeArrays(componentAnnotations.beforeEach),
+        ...normalizeArrays(storyAnnotations.beforeEach),
+      ]) {
+        if (context.abortSignal.aborted) {
+          return cleanupCallbacks;
+        }
+        const cleanup = await beforeEach(context);
 
-      if (cleanup) {
-        cleanupCallbacks.push(cleanup);
+        if (cleanup) {
+          cleanupCallbacks.push(cleanup);
+        }
       }
+    } catch (error) {
+      // A failing beforeEach must not leak what earlier hooks already acquired.
+      for (const cleanup of cleanupCallbacks.reverse()) {
+        await cleanup();
+      }
+      throw error;
     }
     return cleanupCallbacks;
   };
