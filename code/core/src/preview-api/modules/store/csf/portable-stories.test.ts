@@ -652,4 +652,28 @@ describe('cleanup', () => {
 
     expect(releaseProjectResource).toHaveBeenCalledOnce();
   });
+
+  it('should keep releasing earlier resources when a rollback cleanup throws and surface the original error', async () => {
+    const releaseProjectResource = vi.fn();
+    const storyBeforeEachError = new Error('story beforeEach failed');
+
+    const composedStory = composeStory(
+      {
+        render: () => 'foo',
+        beforeEach: () => {
+          throw storyBeforeEachError;
+        },
+      },
+      {
+        beforeEach: () => () => {
+          throw new Error('meta cleanup failed');
+        },
+      },
+      { beforeEach: () => releaseProjectResource }
+    );
+
+    await expect(composedStory.load()).rejects.toBe(storyBeforeEachError);
+
+    expect(releaseProjectResource).toHaveBeenCalledOnce();
+  });
 });
