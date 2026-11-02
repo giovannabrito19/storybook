@@ -68,13 +68,14 @@ export function prepareStory<TRenderer extends Renderer>(
   };
 
   const applyBeforeEach = async (context: StoryContext<TRenderer>): Promise<CleanupCallback[]> => {
-    const cleanupCallbacks = new Array<() => unknown>();
+    const cleanupCallbacks: CleanupCallback[] = [];
+    const beforeEachHooks = [
+      ...normalizeArrays(projectAnnotations.beforeEach),
+      ...normalizeArrays(componentAnnotations.beforeEach),
+      ...normalizeArrays(storyAnnotations.beforeEach),
+    ];
     try {
-      for (const beforeEach of [
-        ...normalizeArrays(projectAnnotations.beforeEach),
-        ...normalizeArrays(componentAnnotations.beforeEach),
-        ...normalizeArrays(storyAnnotations.beforeEach),
-      ]) {
+      for (const beforeEach of beforeEachHooks) {
         if (context.abortSignal.aborted) {
           return cleanupCallbacks;
         }
