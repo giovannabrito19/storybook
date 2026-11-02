@@ -88,7 +88,11 @@ export function prepareStory<TRenderer extends Renderer>(
     } catch (error) {
       // A failing beforeEach must not leak what earlier hooks already acquired.
       for (const cleanup of cleanupCallbacks.reverse()) {
-        await cleanup();
+        try {
+          await cleanup();
+        } catch {
+          // The original beforeEach failure is what the caller needs to see.
+        }
       }
       throw error;
     }
