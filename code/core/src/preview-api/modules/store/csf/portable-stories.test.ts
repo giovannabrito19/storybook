@@ -716,18 +716,18 @@ describe('cleanup', () => {
   });
 
   it('should not throw if throwErrors option is explicitly set to false', async () => {
-    const storyBeforeEachError = new Error('ignored error');
+    const cleanupError = new Error('ignored cleanup error');
     const composedStory = composeStory(
       {
         render: () => 'foo',
-        beforeEach: () => {
-          throw storyBeforeEachError;
+        beforeEach: () => () => {
+          throw cleanupError;
         },
       },
       {}
     );
 
-    await expect(composedStory.load()).rejects.toBe(storyBeforeEachError);
+    await composedStory.load();
 
     await expect(portableStories.cleanup({ throwErrors: false })).resolves.toBe(true);
   });

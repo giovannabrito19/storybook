@@ -92,7 +92,7 @@ const cleanups: CleanupCallback[] = [];
  * are fully executed before rethrowing the primary exception.
  */
 
-export async function cleanup(): Promise<boolean> {
+export async function cleanup(options = { throwErrors: true }): Promise<boolean> {
   const hasCleanups = cleanups.length > 0;
   const errors: unknown[] = [];
   const callbacks = [...cleanups].reverse();
@@ -106,7 +106,7 @@ export async function cleanup(): Promise<boolean> {
     }
   }
 
-  if (errors.length > 0) {
+  if (errors.length > 0 && options.throwErrors) {
     if (errors.length > 1) {
       throw new AggregateError(
         errors,
