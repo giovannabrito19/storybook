@@ -626,13 +626,10 @@ describe('cleanup', () => {
 
     await composedStory.load();
 
-    const failure: any = await portableStories.cleanup().then(
-      () => undefined,
-      (error) => error
-    );
+    const failure = await portableStories.cleanup().catch((error: unknown) => error);
 
     expect(calls).toEqual(['story', 'meta', 'project']);
     expect(failure).toBeInstanceOf(AggregateError);
-    expect(failure.errors).toEqual([storyError, projectError]);
+    expect((failure as AggregateError).errors).toEqual([storyError, projectError]);
   });
 });
