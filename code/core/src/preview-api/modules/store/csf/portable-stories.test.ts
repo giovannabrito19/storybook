@@ -714,4 +714,21 @@ describe('cleanup', () => {
     const resultCleaned = await portableStories.cleanup();
     expect(resultCleaned).toBe(true);
   });
+
+  it('should not throw if throwErrors option is explicitly set to false', async () => {
+    const storyBeforeEachError = new Error('ignored error');
+    const composedStory = composeStory(
+      {
+        render: () => 'foo',
+        beforeEach: () => {
+          throw storyBeforeEachError;
+        },
+      },
+      {}
+    );
+
+    await expect(composedStory.load()).rejects.toBe(storyBeforeEachError);
+
+    await expect(portableStories.cleanup({ throwErrors: false })).resolves.toBe(true);
+  });
 });
