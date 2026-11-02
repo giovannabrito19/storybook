@@ -676,4 +676,28 @@ describe('cleanup', () => {
 
     expect(releaseProjectResource).toHaveBeenCalledOnce();
   });
+
+  it('should report rollback failures together with the original beforeEach error', async () => {
+    const storyBeforeEachError = new Error('story beforeEach failed');
+    const rollbackError = new Error('meta cleanup failed');
+
+    const composedStory = composeStory(
+      {
+        render: () => 'foo',
+        beforeEach: () => {
+          throw storyBeforeEachError;
+        },
+      },
+      {
+        beforeEach: () => () => {
+          throw rollbackError;
+        },
+      }
+    );
+
+    const failure = await composedStory.load().catch((error: unknown) => error);
+
+    expect(failure).toBeInstanceOf(AggregateError);
+    expect((failure as AggregateError).errors).toEqual([storyBeforeEachError, rollbackError]);
+  });
 });
