@@ -700,4 +700,18 @@ describe('cleanup', () => {
     expect(failure).toBeInstanceOf(AggregateError);
     expect((failure as AggregateError).errors).toEqual([storyBeforeEachError, rollbackError]);
   });
+
+  it('should return true if any resources were cleaned, and false if none', async () => {
+    const resultEmpty = await portableStories.cleanup();
+    expect(resultEmpty).toBe(false);
+
+    const releaseResource = vi.fn();
+    const composedStory = composeStory(
+      { render: () => 'foo', beforeEach: () => releaseResource },
+      {}
+    );
+    await composedStory.load();
+    const resultCleaned = await portableStories.cleanup();
+    expect(resultCleaned).toBe(true);
+  });
 });
