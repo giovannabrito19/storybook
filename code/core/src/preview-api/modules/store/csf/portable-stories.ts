@@ -35,10 +35,10 @@ import { ReporterAPI } from '../reporter-api.ts';
 import { composeConfigs } from './composeConfigs.ts';
 import { composeProjectAnnotationsWithCore } from './composeProjectAnnotationsWithCore.ts';
 import { getCsfFactoryAnnotations } from './csf-factory-utils.ts';
+import { hideArgTypes } from './hideArgTypes.ts';
 import { normalizeComponentAnnotations } from './normalizeComponentAnnotations.ts';
 import { normalizeProjectAnnotations } from './normalizeProjectAnnotations.ts';
 import { normalizeStory } from './normalizeStory.ts';
-import { hideArgTypes } from './hideArgTypes.ts';
 import { prepareContext, prepareStory } from './prepareStory.ts';
 
 // TODO we should get to the bottom of the singleton issues caused by dual ESM/CJS modules
@@ -82,14 +82,38 @@ export function setProjectAnnotations<TRenderer extends Renderer = Renderer>(
 
   return globalThis.globalProjectAnnotations ?? {};
 }
-
 const cleanups: CleanupCallback[] = [];
 
+/**
+ * Unmounts current stories and executes all registered cleanup callbacks.
+ *
+ * Intercepts errors thrown by individual callbacks (such as hooks or decorators)
+ * to guarantee that all remaining teardown routines, including DOM unmounting,
+ * are fully executed before rethrowing the primary exception.
+ */
+
 export async function cleanup() {
-  for (const callback of [...cleanups].reverse()) {
-    await callback();
-  }
+  const errors: unknown[] = [];
+  const callbacks = [...cleanups].reverse();
   cleanups.length = 0;
+  for (const callback of callbacks) {
+    try {
+      await callback();
+    } catch (error) {
+      errors.push(error);
+    }
+  }
+
+  if (errors.length === 1) {
+    throw errors[0];
+  }
+
+  if (errors.length > 1) {
+    throw new AggregateError(
+      errors,
+      'Multiple errors occurred while cleaning up portable stories.'
+    );
+  }
 }
 
 export function composeStory<TRenderer extends Renderer = Renderer, TArgs extends Args = Args>(

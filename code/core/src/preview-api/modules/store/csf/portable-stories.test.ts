@@ -596,3 +596,60 @@ describe('setProjectAnnotations', () => {
     );
   });
 });
+
+describe('cleanup', () => {
+  it('should aggregate every failure when more than one cleanup callback throws', async () => {
+    const calls: string[] = [];
+    const storyError = new Error('cleanup from story failed');
+    const projectError = new Error('cleanup from project failed');
+
+    const composedStory = composeStory(
+      {
+        render: () => 'foo',
+        beforeEach: () => () => {
+          calls.push('story');
+          throw storyError;
+        },
+      },
+      {
+        beforeEach: () => () => {
+          calls.push('meta');
+        },
+      },
+      {
+        beforeEach: () => () => {
+          calls.push('project');
+          throw projectError;
+        },
+      }
+    );
+
+    await composedStory.load();
+
+    const failure = await portableStories.cleanup().catch((error: unknown) => error);
+
+    expect(calls).toEqual(['story', 'meta', 'project']);
+    expect(failure).toBeInstanceOf(AggregateError);
+    expect((failure as AggregateError).errors).toEqual([storyError, projectError]);
+  });
+
+  it('should release the resources of earlier beforeEach hooks when a later one throws', async () => {
+    const releaseProjectResource = vi.fn();
+    const beforeEachError = new Error('meta beforeEach failed');
+
+    const composedStory = composeStory(
+      { render: () => 'foo' },
+      {
+        beforeEach: () => {
+          throw beforeEachError;
+        },
+      },
+      { beforeEach: () => releaseProjectResource }
+    );
+
+    await expect(composedStory.load()).rejects.toBe(beforeEachError);
+    await portableStories.cleanup();
+
+    expect(releaseProjectResource).toHaveBeenCalledOnce();
+  });
+});

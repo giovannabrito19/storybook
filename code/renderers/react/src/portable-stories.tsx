@@ -12,16 +12,16 @@ import type {
 } from 'storybook/internal/types';
 
 import {
-  cleanup as originalCleanup,
   composeConfigs,
+  cleanup as originalCleanup,
   composeStories as originalComposeStories,
   composeStory as originalComposeStory,
   setProjectAnnotations as originalSetProjectAnnotations,
   setDefaultProjectAnnotations,
 } from 'storybook/preview-api';
 
-import * as reactProjectAnnotations from './entry-preview.tsx';
 import * as reactArgTypesAnnotations from './entry-preview-argtypes.ts';
+import * as reactProjectAnnotations from './entry-preview.tsx';
 import type { Meta } from './public-types.ts';
 import type { ReactRenderer } from './types.ts';
 
@@ -161,9 +161,11 @@ export function composeStories<TModule extends Store_CSFExports<ReactRenderer, a
 
 /**
  * Unmounts the current story and cleans up any registered callbacks and side effects.
- * Useful in test suites (e.g. `afterEach`) when testing portable stories.
  *
- * Example:
+ * Note: If your test environment provides a global `afterEach` hook (e.g., Jest or Vitest with `globals: true`),
+ * cleanup is registered automatically after each test.
+ *
+ * For environments without global hooks, call this function manually in your test teardown:
  *
  * ```jsx
  * import { cleanup } from '@storybook/react';
@@ -175,4 +177,11 @@ export function composeStories<TModule extends Store_CSFExports<ReactRenderer, a
  */
 export async function cleanup(): Promise<void> {
   return originalCleanup();
+}
+
+// Auto-cleanup for environments with a global afterEach (Jest / Vitest with globals: true)
+if (typeof (globalThis as any).afterEach === 'function') {
+  (globalThis as any).afterEach(async () => {
+    await cleanup();
+  });
 }
