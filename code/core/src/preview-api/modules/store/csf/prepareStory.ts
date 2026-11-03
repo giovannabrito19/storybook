@@ -67,6 +67,20 @@ export function prepareStory<TRenderer extends Renderer>(
     return loaded;
   };
 
+  // Releases in reverse acquisition order; a failing callback never stops the remaining ones.
+  // Returns the failures so the caller decides how to surface them.
+  const releaseInReverse = async (cleanupCallbacks: CleanupCallback[]): Promise<unknown[]> => {
+    const failures: unknown[] = [];
+    for (const cleanup of [...cleanupCallbacks].reverse()) {
+      try {
+        await cleanup();
+      } catch (failure) {
+        failures.push(failure);
+      }
+    }
+    return failures;
+  };
+
   const applyBeforeEach = async (context: StoryContext<TRenderer>): Promise<CleanupCallback[]> => {
     const cleanupCallbacks: CleanupCallback[] = [];
     const beforeEachHooks = [
@@ -87,8 +101,12 @@ export function prepareStory<TRenderer extends Renderer>(
       }
     } catch (error) {
       // A failing beforeEach must not leak what earlier hooks already acquired.
-      for (const cleanup of cleanupCallbacks.reverse()) {
-        await cleanup();
+      const rollbackFailures = await releaseInReverse(cleanupCallbacks);
+      if (rollbackFailures.length > 0) {
+        throw new AggregateError(
+          [error, ...rollbackFailures],
+          'beforeEach failed and some of the cleanups of earlier hooks failed as well.'
+        );
       }
       throw error;
     }
