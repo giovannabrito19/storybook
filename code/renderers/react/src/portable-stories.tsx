@@ -174,9 +174,13 @@ export function composeStories<TModule extends Store_CSFExports<ReactRenderer, a
  *   await cleanup();
  * });
  * ```
+ *
+ * @param {Object} [options] - Configuration options for cleanup.
+ * @param {boolean} [options.throwErrors=true] - Whether to throw errors encountered during cleanup.
+ * @returns {Promise<boolean>} True if any resources were cleaned up, false otherwise.
  */
-export async function cleanup(): Promise<void> {
-  return originalCleanup();
+export async function cleanup(options?: { throwErrors?: boolean }): Promise<boolean> {
+  return originalCleanup(options);
 }
 
 // Auto-cleanup for environments with a global afterEach (Jest / Vitest with globals: true)

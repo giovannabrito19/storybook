@@ -92,10 +92,12 @@ const cleanups: CleanupCallback[] = [];
  * are fully executed before rethrowing the primary exception.
  */
 
-export async function cleanup() {
+export async function cleanup(options = { throwErrors: true }): Promise<boolean> {
+  const hasCleanups = cleanups.length > 0;
   const errors: unknown[] = [];
   const callbacks = [...cleanups].reverse();
   cleanups.length = 0;
+
   for (const callback of callbacks) {
     try {
       await callback();
@@ -104,16 +106,17 @@ export async function cleanup() {
     }
   }
 
-  if (errors.length === 1) {
+  if (errors.length > 0 && options.throwErrors) {
+    if (errors.length > 1) {
+      throw new AggregateError(
+        errors,
+        'Multiple errors occurred while cleaning up portable stories.'
+      );
+    }
     throw errors[0];
   }
 
-  if (errors.length > 1) {
-    throw new AggregateError(
-      errors,
-      'Multiple errors occurred while cleaning up portable stories.'
-    );
-  }
+  return hasCleanups;
 }
 
 export function composeStory<TRenderer extends Renderer = Renderer, TArgs extends Args = Args>(
