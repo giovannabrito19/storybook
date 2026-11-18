@@ -1,0 +1,185 @@
+[
+  {
+    "navegador": "chromium",
+    "observacoes": [
+      {
+        "etapa": "inicial",
+        "cor": "rgba(0, 0, 0, 0)",
+        "rotulo": "Preview background",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "fixo-sem-escolha",
+        "cor": "rgb(248, 248, 248)",
+        "rotulo": "Background set by story parameters light",
+        "bloqueado": "true"
+      },
+      {
+        "etapa": "retorno-sem-escolha",
+        "cor": "rgba(0, 0, 0, 0)",
+        "rotulo": "Preview background light",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "retorno-apos-espera",
+        "cor": "rgba(0, 0, 0, 0)",
+        "rotulo": "Preview background light",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "dark",
+        "cor": "rgb(51, 51, 51)",
+        "rotulo": "Preview background dark",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "fixo-com-escolha",
+        "cor": "rgb(248, 248, 248)",
+        "rotulo": "Background set by story parameters light",
+        "bloqueado": "true"
+      },
+      {
+        "etapa": "retorno-dark",
+        "cor": "rgb(51, 51, 51)",
+        "rotulo": "Preview background dark",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "alternancia-rapida",
+        "cor": "rgb(51, 51, 51)",
+        "rotulo": "Preview background dark",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "reset",
+        "cor": "rgba(0, 0, 0, 0)",
+        "rotulo": "Preview background",
+        "bloqueado": "false"
+      }
+    ],
+    "errosPagina": [],
+    "versao": "145.0.7632.6"
+  },
+  {
+    "navegador": "firefox",
+    "observacoes": [
+      {
+        "etapa": "inicial",
+        "cor": "rgba(0, 0, 0, 0)",
+        "rotulo": "Preview background",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "fixo-sem-escolha",
+        "cor": "rgb(248, 248, 248)",
+        "rotulo": "Background set by story parameters light",
+        "bloqueado": "true"
+      },
+      {
+        "etapa": "retorno-sem-escolha",
+        "cor": "rgba(0, 0, 0, 0)",
+        "rotulo": "Preview background light",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "retorno-apos-espera",
+        "cor": "rgba(0, 0, 0, 0)",
+        "rotulo": "Preview background light",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "dark",
+        "cor": "rgb(51, 51, 51)",
+        "rotulo": "Preview background dark",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "fixo-com-escolha",
+        "cor": "rgb(248, 248, 248)",
+        "rotulo": "Background set by story parameters light",
+        "bloqueado": "true"
+      },
+      {
+        "etapa": "retorno-dark",
+        "cor": "rgb(51, 51, 51)",
+        "rotulo": "Preview background dark",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "alternancia-rapida",
+        "cor": "rgb(51, 51, 51)",
+        "rotulo": "Preview background dark",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "reset",
+        "cor": "rgba(0, 0, 0, 0)",
+        "rotulo": "Preview background",
+        "bloqueado": "false"
+      }
+    ],
+    "errosPagina": [],
+    "versao": "146.0.1"
+  },
+  {
+    "navegador": "webkit",
+    "observacoes": [
+      {
+        "etapa": "inicial",
+        "cor": "rgba(0, 0, 0, 0)",
+        "rotulo": "Preview background",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "fixo-sem-escolha",
+        "cor": "rgb(248, 248, 248)",
+        "rotulo": "Background set by story parameters light",
+        "bloqueado": "true"
+      },
+      {
+        "etapa": "retorno-sem-escolha",
+        "cor": "rgba(0, 0, 0, 0)",
+        "rotulo": "Preview background light",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "retorno-apos-espera",
+        "cor": "rgba(0, 0, 0, 0)",
+        "rotulo": "Preview background light",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "dark",
+        "cor": "rgb(51, 51, 51)",
+        "rotulo": "Preview background dark",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "fixo-com-escolha",
+        "cor": "rgb(248, 248, 248)",
+        "rotulo": "Background set by story parameters light",
+        "bloqueado": "true"
+      },
+      {
+        "etapa": "retorno-dark",
+        "cor": "rgb(51, 51, 51)",
+        "rotulo": "Preview background dark",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "alternancia-rapida",
+        "cor": "rgb(51, 51, 51)",
+        "rotulo": "Preview background dark",
+        "bloqueado": "false"
+      },
+      {
+        "etapa": "reset",
+        "cor": "rgba(0, 0, 0, 0)",
+        "rotulo": "Preview background",
+        "bloqueado": "false"
+      }
+    ],
+    "errosPagina": [],
+    "versao": "26.0"
+  }
+]
