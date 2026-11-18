@@ -1,0 +1,176 @@
+{
+  "dataUTC": "2026-11-18T01:55:46.271Z",
+  "resultados": [
+    {
+      "motor": "chromium",
+      "verificacoes": [
+        {
+          "id": "controls-unicode",
+          "observado": {
+            "campo": "Confirmar ação ✓",
+            "texto": "Confirmar ação ✓"
+          },
+          "status": "aprovado"
+        },
+        {
+          "id": "controls-vazio",
+          "observado": {
+            "campo": "",
+            "texto": ""
+          },
+          "status": "aprovado"
+        },
+        {
+          "id": "controls-reedicao",
+          "observado": {
+            "campo": "Salvar novamente",
+            "texto": "Salvar novamente"
+          },
+          "status": "aprovado"
+        },
+        {
+          "id": "viewport-320",
+          "status": "falhou",
+          "erro": "expect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 1\n\n  Object {\n-   \"altura\": 568,\n+   \"altura\": 478,\n    \"direcao\": \"column\",\n    \"largura\": 320,\n  }\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate"
+        },
+        {
+          "id": "viewport-768",
+          "status": "falhou",
+          "erro": "expect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 1\n\n  Object {\n-   \"altura\": 600,\n+   \"altura\": 478,\n    \"direcao\": \"row\",\n    \"largura\": 768,\n  }\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate"
+        },
+        {
+          "id": "viewport-restaurar",
+          "observado": {
+            "inicial": {
+              "largura": 980,
+              "altura": 560,
+              "direcao": "row"
+            },
+            "restaurado": {
+              "largura": 980,
+              "altura": 560,
+              "direcao": "row"
+            }
+          },
+          "status": "aprovado"
+        }
+      ],
+      "excecoes": [],
+      "versao": "145.0.7632.6"
+    },
+    {
+      "motor": "firefox",
+      "verificacoes": [
+        {
+          "id": "controls-unicode",
+          "observado": {
+            "campo": "Confirmar ação ✓",
+            "texto": "Confirmar ação ✓"
+          },
+          "status": "aprovado"
+        },
+        {
+          "id": "controls-vazio",
+          "observado": {
+            "campo": "",
+            "texto": ""
+          },
+          "status": "aprovado"
+        },
+        {
+          "id": "controls-reedicao",
+          "observado": {
+            "campo": "Salvar novamente",
+            "texto": "Salvar novamente"
+          },
+          "status": "aprovado"
+        },
+        {
+          "id": "viewport-320",
+          "status": "falhou",
+          "erro": "expect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 1\n\n  Object {\n-   \"altura\": 568,\n+   \"altura\": 478,\n    \"direcao\": \"column\",\n    \"largura\": 320,\n  }\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate"
+        },
+        {
+          "id": "viewport-768",
+          "status": "falhou",
+          "erro": "expect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 1\n\n  Object {\n-   \"altura\": 600,\n+   \"altura\": 478,\n    \"direcao\": \"row\",\n    \"largura\": 768,\n  }\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate"
+        },
+        {
+          "id": "viewport-restaurar",
+          "observado": {
+            "inicial": {
+              "largura": 980,
+              "altura": 560,
+              "direcao": "row"
+            },
+            "restaurado": {
+              "largura": 980,
+              "altura": 560,
+              "direcao": "row"
+            }
+          },
+          "status": "aprovado"
+        }
+      ],
+      "excecoes": [],
+      "versao": "146.0.1"
+    },
+    {
+      "motor": "webkit",
+      "verificacoes": [
+        {
+          "id": "controls-unicode",
+          "observado": {
+            "campo": "Confirmar ação ✓",
+            "texto": "Confirmar ação ✓"
+          },
+          "status": "aprovado"
+        },
+        {
+          "id": "controls-vazio",
+          "observado": {
+            "campo": "",
+            "texto": ""
+          },
+          "status": "aprovado"
+        },
+        {
+          "id": "controls-reedicao",
+          "observado": {
+            "campo": "Salvar novamente",
+            "texto": "Salvar novamente"
+          },
+          "status": "aprovado"
+        },
+        {
+          "id": "viewport-320",
+          "status": "falhou",
+          "erro": "expect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 1\n\n  Object {\n-   \"altura\": 568,\n+   \"altura\": 478,\n    \"direcao\": \"column\",\n    \"largura\": 320,\n  }\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate"
+        },
+        {
+          "id": "viewport-768",
+          "status": "falhou",
+          "erro": "expect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 1\n\n  Object {\n-   \"altura\": 600,\n+   \"altura\": 478,\n    \"direcao\": \"row\",\n    \"largura\": 768,\n  }\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate"
+        },
+        {
+          "id": "viewport-restaurar",
+          "observado": {
+            "inicial": {
+              "largura": 980,
+              "altura": 560,
+              "direcao": "row"
+            },
+            "restaurado": {
+              "largura": 980,
+              "altura": 560,
+              "direcao": "row"
+            }
+          },
+          "status": "aprovado"
+        }
+      ],
+      "excecoes": [],
+      "versao": "26.0"
+    }
+  ]
+}
